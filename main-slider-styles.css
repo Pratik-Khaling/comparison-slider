@@ -39,7 +39,8 @@
     z-index: 2; /* Ensure the handle is above the images */
     
     /* Set the background image */
-    background-image: url('https://raw.githubusercontent.com/Pratik-Khaling/comparison-slider/3160ef348220e9b40b0b6ef879c9e86970f3051d/rl.png');
+   background-image: url('https://raw.githubusercontent.com/Pratik-Khaling/comparison-slider/3160ef348220e9b40b0b6ef879c9e86970f3051d/rl.png');
+
     background-size: 100%; /* Adjust the size of the background image */
     background-repeat: no-repeat;
 }
