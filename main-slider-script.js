@@ -7,20 +7,29 @@ document.addEventListener("DOMContentLoaded", function() {
     const imageContainer = document.querySelector(".image-container");
     const line = document.querySelector(".line");
 
+    let isDragging = false;
+
     function initializeSlider() {
         const containerRect = imageContainer.getBoundingClientRect();
-        const initialHandleX = containerRect.width / 2; // Initial handle position (center)
+        const containerWidth = containerRect.width;
+
+        // Initial handle position (center)
+        const initialHandleX = containerWidth / 2;
 
         // Set the initial handle position and clip path
         handle.style.left = initialHandleX + "px";
-        beforeImage.style.clipPath = `polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%)`;
-        afterImage.style.clipPath = `polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)`;
-        line.style.left = initialHandleX + "px";
+        updateClipPath(initialHandleX, containerWidth);
+    }
+
+    function updateClipPath(handleX, containerWidth) {
+        const percentage = (handleX / containerWidth) * 100;
+
+        beforeImage.style.clipPath = `polygon(0% 0%, ${percentage}% 0%, ${percentage}% 100%, 0% 100%)`;
+        afterImage.style.clipPath = `polygon(${percentage}% 0%, 100% 0%, 100% 100%, ${percentage}% 100%)`;
+        line.style.left = handleX + "px";
     }
 
     initializeSlider(); // Call the initialization function
-
-    let isDragging = false;
 
     handle.addEventListener("mousedown", startDrag);
     handle.addEventListener("touchstart", startDrag);
@@ -33,43 +42,48 @@ document.addEventListener("DOMContentLoaded", function() {
         if (e.type === "touchstart") {
             e.preventDefault();
         }
-    }
 
-    window.addEventListener("mousemove", moveSlider);
-    window.addEventListener("touchmove", moveSlider);
-
-    function moveSlider(e) {
-        if (!isDragging) return;
-
+        // Calculate the initial position of the handle relative to the mouse/touch event
         const containerRect = imageContainer.getBoundingClientRect();
-        const containerWidth = containerRect.width;
+        const handleRect = handle.getBoundingClientRect();
+        const offsetX = e.clientX - containerRect.left - handleRect.left;
 
-        let clientX;
+        window.addEventListener("mousemove", moveSlider);
+        window.addEventListener("touchmove", moveSlider);
 
-        if (e.type === "mousemove") {
-            clientX = e.clientX;
-        } else if (e.type === "touchmove") {
-            clientX = e.touches[0].clientX;
+        function moveSlider(e) {
+            if (!isDragging) return;
+
+            let clientX;
+
+            if (e.type === "mousemove") {
+                clientX = e.clientX;
+            } else if (e.type === "touchmove") {
+                clientX = e.touches[0].clientX;
+            }
+
+            // Calculate the new handle position while considering the initial offset
+            const handleX = clientX - containerRect.left - offsetX;
+            const containerWidth = containerRect.width;
+
+            const clampedHandleX = Math.max(0, Math.min(handleX, containerWidth));
+            handle.style.left = clampedHandleX + "px";
+            updateClipPath(clampedHandleX, containerWidth);
         }
 
-        const mouseX = clientX - containerRect.left;
-        const handleX = Math.max(0, Math.min(mouseX, containerWidth));
-        handle.style.left = handleX + "px";
+        window.addEventListener("mouseup", stopDrag);
+        window.addEventListener("touchend", stopDrag);
 
-        const percentage = (handleX / containerWidth) * 100;
+        function stopDrag() {
+            if (isDragging) {
+                imageContainer.style.transition = "";
+            }
+            isDragging = false;
 
-        beforeImage.style.clipPath = `polygon(0% 0%, ${percentage}% 0%, ${percentage}% 100%, 0% 100%)`;
-        afterImage.style.clipPath = `polygon(${percentage}% 0%, 100% 0%, 100% 100%, ${percentage}% 100%)`;
-        line.style.left = handleX + "px";
-    }
-
-    window.addEventListener("mouseup", stopDrag);
-    window.addEventListener("touchend", stopDrag);
-
-    function stopDrag() {
-        if (isDragging) {
-            imageContainer.style.transition = "";
+            window.removeEventListener("mousemove", moveSlider);
+            window.removeEventListener("touchmove", moveSlider);
+            window.removeEventListener("mouseup", stopDrag);
+            window.removeEventListener("touchend", stopDrag);
         }
-        isDragging = false;
     }
 });
