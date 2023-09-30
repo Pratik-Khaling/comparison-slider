@@ -1,6 +1,6 @@
 // Wait for the DOM content to fully load
 document.addEventListener("DOMContentLoaded", function() {
- // JavaScript for Image Comparison Module
+// JavaScript for Image Comparison Module
 const handle = document.querySelector(".handle");
 const beforeImage = document.querySelector(".before-image");
 const afterImage = document.querySelector(".after-image");
@@ -74,4 +74,5 @@ function stopDrag() {
     }
     isDragging = false;
 }
+
 });
