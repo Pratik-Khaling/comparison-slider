@@ -1,38 +1,39 @@
-document.addEventListener("DOMContentLoaded", function() {// JavaScript for Image Comparison Module
-const handle = document.querySelector(".handle");
-const beforeImage = document.querySelector(".before-image");
-const afterImage = document.querySelector(".after-image");
-const imageContainer = document.querySelector(".image-container");
-const line = document.querySelector(".line");
+// Variables and initialization (as in your existing code)
 
-function initializeSlider() {
-    const containerRect = imageContainer.getBoundingClientRect();
-    const initialHandleX = containerRect.width / 2; // Initial handle position (center)
+handle.addEventListener("mousedown", handleDragStart);
+handle.addEventListener("touchstart", handleDragStart);
 
-    // Set the initial handle position and clip path
-    handle.style.left = initialHandleX + "px";
-    beforeImage.style.clipPath = `polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%)`;
-    afterImage.style.clipPath = `polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)`;
-    line.style.left = initialHandleX + "px";
-}
-
-initializeSlider(); // Call the initialization function
-
-let isDragging = false;
-
-handle.addEventListener("mousedown", (e) => {
+function handleDragStart(e) {
     isDragging = true;
     imageContainer.style.transition = "none";
-});
+    
+    if (e.type === "touchstart") {
+        // For touch devices, use touch events
+        const touchX = e.touches[0].clientX - imageContainer.getBoundingClientRect().left;
+        handle.style.left = touchX + "px";
+    } else {
+        // For desktop, use mouse events
+        handle.style.left = e.clientX - imageContainer.getBoundingClientRect().left + "px";
+    }
+    
+    // Add event listeners for both mousemove and touchmove
+    window.addEventListener("mousemove", handleDrag);
+    window.addEventListener("touchmove", handleDrag);
+    
+    // Add event listener for the end of dragging
+    window.addEventListener("mouseup", handleDragEnd);
+    window.addEventListener("touchend", handleDragEnd);
+}
 
-window.addEventListener("mousemove", (e) => {
+function handleDrag(e) {
     if (!isDragging) return;
 
     const containerRect = imageContainer.getBoundingClientRect();
     const mouseX = e.clientX - containerRect.left;
+    const touchX = e.touches[0].clientX - containerRect.left;
     const containerWidth = containerRect.width;
 
-    const handleX = Math.max(0, Math.min(mouseX, containerWidth));
+    const handleX = Math.max(0, Math.min(e.type === "touchmove" ? touchX : mouseX, containerWidth));
     handle.style.left = handleX + "px";
 
     const percentage = (handleX / containerWidth) * 100;
@@ -40,12 +41,17 @@ window.addEventListener("mousemove", (e) => {
     beforeImage.style.clipPath = `polygon(0% 0%, ${percentage}% 0%, ${percentage}% 100%, 0% 100%)`;
     afterImage.style.clipPath = `polygon(${percentage}% 0%, 100% 0%, 100% 100%, ${percentage}% 100%)`;
     line.style.left = handleX + "px";
-});
+}
 
-window.addEventListener("mouseup", () => {
+function handleDragEnd() {
     if (isDragging) {
         imageContainer.style.transition = "";
     }
     isDragging = false;
-});
-});
+
+    // Remove the event listeners for mousemove, touchmove, and drag end
+    window.removeEventListener("mousemove", handleDrag);
+    window.removeEventListener("touchmove", handleDrag);
+    window.removeEventListener("mouseup", handleDragEnd);
+    window.removeEventListener("touchend", handleDragEnd);
+}
