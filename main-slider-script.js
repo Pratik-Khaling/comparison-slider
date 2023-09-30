@@ -14,7 +14,7 @@ function initializeSlider() {
     const initialHandleX = containerRect.width / 2; // Initial handle position (center)
 
     // Set the initial handle position and clip path
-    handle.style.left = "50%";
+    handle.style.left = initialHandleX + "px";
     beforeImage.style.clipPath = `polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%)`;
     afterImage.style.clipPath = `polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)`;
     line.style.left = initialHandleX + "px";
