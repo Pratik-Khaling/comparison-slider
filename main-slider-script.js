@@ -44,9 +44,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Calculate the initial position of the handle relative to the mouse/touch event
-        const containerRect = imageContainer.getBoundingClientRect();
         const handleRect = handle.getBoundingClientRect();
-        const offsetX = e.clientX - containerRect.left - handleRect.left;
+        const offsetX = e.clientX - handleRect.left;
 
         window.addEventListener("mousemove", moveSlider);
         window.addEventListener("touchmove", moveSlider);
@@ -63,8 +62,8 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             // Calculate the new handle position while considering the initial offset
-            const handleX = clientX - containerRect.left - offsetX;
-            const containerWidth = containerRect.width;
+            const handleX = clientX - offsetX;
+            const containerWidth = imageContainer.clientWidth;
 
             const clampedHandleX = Math.max(0, Math.min(handleX, containerWidth));
             handle.style.left = clampedHandleX + "px";
