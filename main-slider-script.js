@@ -1,4 +1,4 @@
-// JavaScript for Image Comparison Module
+document.addEventListener("DOMContentLoaded", function() {// JavaScript for Image Comparison Module
 const handle = document.querySelector(".handle");
 const beforeImage = document.querySelector(".before-image");
 const afterImage = document.querySelector(".after-image");
@@ -47,4 +47,5 @@ window.addEventListener("mouseup", () => {
         imageContainer.style.transition = "";
     }
     isDragging = false;
+});
 });
