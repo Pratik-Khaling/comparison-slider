@@ -1,0 +1,70 @@
+/* CSS Styles */
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.comparison-container {
+    position: relative;
+    width: 100%;
+    height:100%;
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    height:100%;
+    overflow: hidden;
+}
+
+.before-image,
+.after-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.before-image img,
+.after-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Maintain image aspect ratio */
+    user-select: none;
+}
+
+.handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px; /* Adjust the handle width */
+    height: 40px; /* Adjust the handle height */
+    background-color: #ffffff; /* Off-white handle color */
+    border-radius: 50%;
+    cursor: ew-resize;
+    z-index: 2; /* Ensure the handle is above the images */
+    
+    /* Set the background image */
+    background-image: url('img/rl.png');
+    background-size: 100%; /* Adjust the size of the background image */
+    background-repeat: no-repeat;
+}
+
+
+/* CSS Styles */
+/* ... (previous styles) */
+
+.line {
+    position: absolute;
+    top: 0%;
+    left: 0;
+    width: 2px;
+    height: 100%; /* Adjust the line height */
+    background-color: #ffffff; /* Off-white line color */
+    z-index: 1; /* Ensure the line is behind the handle */
+}
